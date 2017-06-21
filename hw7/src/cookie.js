@@ -42,29 +42,22 @@ let listTable = homeworkContainer.querySelector('#list-table tbody');
 function isMatching(full, chunk) {
     return full.toLowerCase().includes(chunk.toLowerCase());
 }
+
 function cookieListSort(cookies, filter) {
     listTable.innerHTML = '';
-
     for (let item in cookies) {
         if (isMatching(item, filter) || isMatching(cookies[item], filter)) {
-            let newTr = document.createElement('tr');
-            let addEl = listTable.appendChild(newTr);
-            let newTdName = document.createElement('td');
-            let newTdValue = document.createElement('td');
-            let newTdDelete = document.createElement('td');
+            let newTr = `
+                <tr>
+                    <td>${item}</td><td>${cookies[item]}</td><td><button id="${item}">X</button></td>
+                </tr>
+            `;
 
-            addEl.appendChild(newTdName);
-            newTdName.innerText = item;
-            addEl.appendChild(newTdValue);
-            newTdValue.innerText = cookies[item];
-            addEl.appendChild(newTdDelete);
-            newTdDelete.innerHTML = '<button>X</button>';
-
-            newTdDelete.addEventListener('click', ()=>{
+            listTable.insertAdjacentHTML('beforeend', newTr);
+            listTable.querySelector(`#${item}`).addEventListener('click', () => {
                 require('./index.js').deleteCookie(item);
                 cookieListSort(getCookies(), filterNameInput.value);
             })
-
         }
     }
 }
